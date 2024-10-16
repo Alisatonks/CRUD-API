@@ -1,0 +1,24 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "CRUD API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && webpack --config webpack.config.js",
+    "start": "node dist/bundle.js",
+    "dev": "set NODE_OPTIONS=--import=./register.js && ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0"
+  },
+  "dependencies": {
+    "webpack-cli": "^5.1.4"
+  }
+}
