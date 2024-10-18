@@ -1,9 +1,8 @@
 import crypto from 'node:crypto';
 import { IncomingMessage, ServerResponse } from 'http';
-import { USER_CREATED, SUCCESS, FAIL, INVALID_DATA, SERVER_ERROR, NOT_FOUND, ROUTE_NOT_FOUND, BODY_NOT_VALID, VALIDATION_ERROR } from '../utils/constants';
+import { NOT_FOUND, ROUTE_NOT_FOUND, BODY_NOT_VALID, VALIDATION_ERROR } from '../utils/constants';
 import bodyParser from '../utils/bodyParser';
 import { User } from '../types';
-import writeUser from '../utils/writeUser';
 import {users} from '../db/memoryDB';
 
 const postRequest = async (req: IncomingMessage, res: ServerResponse) => {
