@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "CRUD API",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "build": "set NODE_OPTIONS=--import=./register.js tsc && webpack --config webpack.config.js",
-    "start": "node dist/bundle.js",
-    "dev": "set NODE_OPTIONS=--import=./register.js && nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "start:dev": "nodemon ./src/index.ts",
+    "start:multi": "nodemon ./src/index.ts --multi",
+    "start:prod": "webpack && node ./dist/index.js",
+    "start:prod-multi": "webpack && node ./dist/index.js --multi",
+    "build:prod": "webpack",
     "test": "jest"
   },
   "keywords": [],
