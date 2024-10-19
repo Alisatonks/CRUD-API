@@ -1,8 +1,6 @@
 import path from "node:path";
 import { promises as fs } from 'node:fs';
-import { User } from "../types";
-import {initializeUsers} from '../db/memoryDB';
-
+import { initializeUsers } from "../db/memoryDB";
 async function loadUsers() {
     try {
         const __dirname = import.meta.dirname;

@@ -8,4 +8,7 @@ export const SUCCESS = 'Successful operation';
 export const FAIL = 'Operation failed';
 export const INVALID_DATA = 'Invalid JSON data';
 export const SERVER_ERROR = 'Server error';
+export const SERVER_ERROR_MSG = 'Something went wrong on the server. Please try again later.';
 export const BODY_NOT_VALID = 'Request body is not valid';
+export const USER_ID_MISSING = 'User ID is missing';
+

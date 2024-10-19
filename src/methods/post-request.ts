@@ -9,6 +9,12 @@ const postRequest = async (req: IncomingMessage, res: ServerResponse) => {
     if(req.url === '/api/users') {
         try{
             const body = await bodyParser(req) as Partial<User>;
+            if (!body.username || !body.age || !body.hobbies) {
+                res.statusCode = 400;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ title: VALIDATION_ERROR, message: BODY_NOT_VALID }));
+                return;
+            }
             body.id = crypto.randomUUID();
             const newUser = body as User;
             users.push(newUser);
@@ -21,7 +27,6 @@ const postRequest = async (req: IncomingMessage, res: ServerResponse) => {
             res.end(JSON.stringify({ title: VALIDATION_ERROR, message: BODY_NOT_VALID }));
         }
     } else {
-        console.log(req.url);
         res.statusCode = 404;
         res.setHeader("Content-Type", "application/json");
         res.end(JSON.stringify({ title: NOT_FOUND, message: ROUTE_NOT_FOUND }));
