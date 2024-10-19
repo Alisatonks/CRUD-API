@@ -18,7 +18,9 @@ const postRequest = async (req: IncomingMessage, res: ServerResponse) => {
             body.id = crypto.randomUUID();
             const newUser = body as User;
             users.push(newUser);
-            res.writeHead(201, {"Content-Type": "application/json"});
+            res.statusCode = 201;
+            res.setHeader("Content-Type", "application/json");
+            res.write(JSON.stringify(newUser));
             res.end(); 
         } catch(e) {
             console.log(e)

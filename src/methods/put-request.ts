@@ -39,8 +39,9 @@ const putRequest = async(req: IncomingMessage, res: ServerResponse) => {
                             ...body, 
                             id 
                         };
-            
-                        res.writeHead(204, { "Content-Type": "application/json" });
+                        res.statusCode = 200;
+                        res.setHeader("Content-Type", "application/json");
+                        res.write(JSON.stringify({id, ...body}));
                         res.end();
                     } catch (error) {
                         res.statusCode = 500;
