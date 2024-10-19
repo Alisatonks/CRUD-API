@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start:dev": "nodemon ./src/index.ts",
-    "start:multi": "nodemon ./src/cluster.ts",
+    "start:dev-multi": "nodemon ./src/index.ts --multi",
     "start:prod": "webpack && node ./dist/index.js",
     "start:prod-multi": "webpack && node ./dist/index.js --multi",
     "build:prod": "webpack",

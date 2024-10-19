@@ -5,21 +5,21 @@ export let users: User[] = [];
 export const initialUsers = [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
-      "username": "Alisa Tonks",
-      "age": 38,
-      "hobbies": "Crocheting"
+      "username": "James Potter",
+      "age": 21,
+      "hobbies": "Quiddich"
     },
     {
       "id": "551e8400-e29b-41d4-a716-446655440000",
-      "username": "Volha Haiduk",
-      "age": 39,
-      "hobbies": "Traveling"
+      "username": "Remus Lupin",
+      "age": 38,
+      "hobbies": "Reading"
     },
     {
-      "username": "Pavel Haiduk",
-      "age": 39,
-      "hobbies": "Cars",
-      "id": "2f14a633-27e3-44c9-a2f0-6a969b9677ec"
+      "id": "2f14a633-27e3-44c9-a2f0-6a969b9677ec",
+      "username": "Sirius Black",
+      "age": 36,
+      "hobbies": "Muggle motorbikes.",
     }
 ]
 
