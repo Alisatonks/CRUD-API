@@ -1,5 +1,4 @@
 import http from 'http';
-import dotenv from 'dotenv';
 import getRequest from './methods/get-request';
 import deleteRequest from './methods/delete-request';
 import putRequest from './methods/put-request';
@@ -9,14 +8,15 @@ import { initializeUsers } from './db/memoryDB';
 import { users } from './db/memoryDB';
 import { SERVER_ERROR, SERVER_ERROR_MSG } from './utils/constants';
 
-dotenv.config();
-
 function startServer(port: string | number): Promise<http.Server> {
+
     return new Promise(async (resolve, reject) => {
         try {
             initializeUsers();
             const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
                 (req as any).users = users;
+
+                res.setHeader('X-Worker-Port', port.toString());
 
                 try {
                     switch (req.method) {

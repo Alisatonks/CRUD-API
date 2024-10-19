@@ -10,6 +10,8 @@ const getRequest = (req: IncomingMessage, res: ServerResponse) => {
     
         const { baseUrl, id } = getBaseUrlAndID(req.url || '');
 
+        const workerPort = res.getHeader('X-Worker-Port') || 'unknown';
+
         if (baseUrl === '/api/users') {
             if (!id) {
                 res.statusCode = 200;
@@ -40,9 +42,6 @@ const getRequest = (req: IncomingMessage, res: ServerResponse) => {
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify({ title: NOT_FOUND, message: ROUTE_NOT_FOUND }));
         }
-    
-    
-    
 };
 
 export default getRequest;
