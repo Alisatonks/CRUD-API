@@ -3,7 +3,7 @@ import os from 'node:os';
 import startServer from "./server"; 
 import dotenv from 'dotenv';
 import http from 'node:http';
-import { changeUsers, initializeUsers } from "./db/users";
+import { changeUsers } from "./db/users";
 import { ProcessMessage } from "./types";
 
 const createCluster = () => {
@@ -14,13 +14,10 @@ const createCluster = () => {
     if (cluster.isPrimary) {
 
         const numCPUs = os.cpus().length - 1;
-        initializeUsers();
 
         cluster.on('message', (worker, message) => {
             if (message.type === 'UPDATE_USERS') {
-                // Update the users array in the primary process
                 changeUsers(message.data);
-                // Notify all workers of the updated state
                 for (const id in cluster.workers) {
                     cluster.workers[id]?.send({ type: 'SYNC_USERS', data: message.data });
                 }
