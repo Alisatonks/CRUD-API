@@ -4,8 +4,8 @@ import deleteRequest from './methods/delete-request';
 import putRequest from './methods/put-request';
 import postRequest from './methods/post-request';
 import { IncomingMessage, ServerResponse } from 'http';
-import { initializeUsers } from './db/memoryDB';
-import { users } from './db/memoryDB';
+import { initializeUsers } from './db/users';
+import { users } from './db/users';
 import { SERVER_ERROR, SERVER_ERROR_MSG } from './utils/constants';
 
 function startServer(port: string | number): Promise<http.Server> {

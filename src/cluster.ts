@@ -3,6 +3,8 @@ import os from 'node:os';
 import startServer from "./server"; 
 import dotenv from 'dotenv';
 import http from 'node:http';
+import { changeUsers, initializeUsers } from "./db/users";
+import { ProcessMessage } from "./types";
 
 const createCluster = () => {
     dotenv.config();
@@ -12,6 +14,18 @@ const createCluster = () => {
     if (cluster.isPrimary) {
 
         const numCPUs = os.cpus().length - 1;
+        initializeUsers();
+
+        cluster.on('message', (worker, message) => {
+            if (message.type === 'UPDATE_USERS') {
+                // Update the users array in the primary process
+                changeUsers(message.data);
+                // Notify all workers of the updated state
+                for (const id in cluster.workers) {
+                    cluster.workers[id]?.send({ type: 'SYNC_USERS', data: message.data });
+                }
+            }
+        });
 
         for (let i = 0; i < numCPUs; i++) {
             cluster.fork({ WORKER_PORT: PORT + i + 1 });
@@ -48,6 +62,13 @@ const createCluster = () => {
 
         if (workerPort) {
             startServer(workerPort);
+
+            process.on('message', (message: ProcessMessage) => {
+                if (message.type === 'SYNC_USERS') {
+                    changeUsers(message.data);
+                }
+            });
+
             console.log(`Worker process PID: ${process.pid} running on http://localhost:${workerPort}`);
         } else {
             console.error('WORKER_PORT is not defined');
@@ -56,9 +77,6 @@ const createCluster = () => {
     }
 }
 
-
-
 export default createCluster;
-
 
 

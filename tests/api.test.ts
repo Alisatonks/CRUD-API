@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { Server } from 'http';
 import startServer from '../src/server';
-import { initialUsers } from '../src/db/memoryDB';
+import { initialUsers } from '../src/db/users';
 
 let server: Server;
 
@@ -26,7 +26,7 @@ describe('User API', () => {
     const newUser = {
       username: 'Harry Potter',
       age: 17,
-      hobbies: 'Quidditch'
+      hobbies: ['Quidditch']
     };
 
     const response = await request(server)
@@ -66,7 +66,7 @@ describe('User API', () => {
     const updatedUser = {
       username: 'Updated',
       age: 17,
-      hobbies: 'some hobby'
+      hobbies: ['some hobby']
     };
 
     const response = await request(server).put(`/api/users/${id}`).send(updatedUser).set('Content-Type', 'application/json');

@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import getBaseUrlAndID from '../utils/getBaseUrlAndID';
 import checkID from '../utils/checkId';
-import {users} from '../db/memoryDB';
+import {findUserIndex, deleteUser} from '../db/users';
 import { VALIDATION_ERROR, 
         ID_NOT_VALID, 
         NOT_FOUND, 
@@ -18,13 +18,19 @@ const deleteRequest = (req:IncomingMessage, res: ServerResponse) => {
                 res.setHeader("Content-Type", "application/json");
                 res.end(JSON.stringify({ title: VALIDATION_ERROR, message: ID_NOT_VALID }));
             } else if (checkID(id)) {
-                const index = users.findIndex(user => user.id === id);
+                const index = findUserIndex(id);
                 if (index === -1) {
                         res.statusCode = 404; 
                         res.setHeader("Content-Type", "application/json");
                         res.end(JSON.stringify({ title: NOT_FOUND, message: USER_NOT_FOUND }));
                 } else {
-                        users.splice(index, 1);
+                    if (process.send) {
+                        process.send({ type: 'DELETE_USER', userId: id });
+                    }
+                        deleteUser(index);
+                        if (process.send) {
+                            process.send({ type: 'delete', id});
+                        }
                         res.writeHead(204, {"Content-Type": "application/json"});
                         res.end();
                 }

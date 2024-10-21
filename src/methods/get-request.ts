@@ -10,8 +10,6 @@ const getRequest = (req: IncomingMessage, res: ServerResponse) => {
     
         const { baseUrl, id } = getBaseUrlAndID(req.url || '');
 
-        const workerPort = res.getHeader('X-Worker-Port') || 'unknown';
-
         if (baseUrl === '/api/users') {
             if (!id) {
                 res.statusCode = 200;

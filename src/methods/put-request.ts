@@ -1,8 +1,15 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import bodyParser from '../utils/bodyParser';
-import { User } from '../types';
-import { users} from '../db/memoryDB';
-import { VALIDATION_ERROR, BODY_NOT_VALID, NOT_FOUND, ROUTE_NOT_FOUND, ID_NOT_VALID, USER_NOT_FOUND, SERVER_ERROR, USER_ID_MISSING } from '../utils/constants';
+import { NewUser } from '../types';
+import { validateUser, updateUser, findUserIndex} from '../db/users';
+import { VALIDATION_ERROR, 
+    BODY_NOT_VALID, 
+    NOT_FOUND, 
+    ROUTE_NOT_FOUND, 
+    ID_NOT_VALID, 
+    USER_NOT_FOUND, 
+    SERVER_ERROR, 
+    USER_ID_MISSING } from '../utils/constants';
 import getBaseUrlAndID from '../utils/getBaseUrlAndID';
 import checkID from '../utils/checkId';
 
@@ -18,30 +25,26 @@ const putRequest = async(req: IncomingMessage, res: ServerResponse) => {
                 res.setHeader("Content-Type", "application/json");
                 res.end(JSON.stringify({ title: VALIDATION_ERROR, message: ID_NOT_VALID }));
             } else if (checkID(id)) {
-                const index = users.findIndex(user => user.id === id);
+                const index = findUserIndex(id);
                 if (index === -1) {
                         res.statusCode = 404; 
                         res.setHeader("Content-Type", "application/json");
                         res.end(JSON.stringify({ title: NOT_FOUND, message: USER_NOT_FOUND }));
                 } else {
                     try {
-                        const body = await bodyParser(req) as Partial<User>;
+                        const body = await bodyParser(req) as NewUser;
             
-                        if (!body.username || !body.age || !body.hobbies) {
+                        if (!validateUser(body)) {
                             res.statusCode = 400;
                             res.setHeader("Content-Type", "application/json");
                             res.end(JSON.stringify({ title: VALIDATION_ERROR, message: BODY_NOT_VALID }));
                             return;
                         }
             
-                        users[index] = {
-                            ...users[index],
-                            ...body, 
-                            id 
-                        };
+                        const updatedUser = updateUser(body, id, index);
                         res.statusCode = 200;
                         res.setHeader("Content-Type", "application/json");
-                        res.write(JSON.stringify({id, ...body}));
+                        res.write(JSON.stringify(updatedUser));
                         res.end();
                     } catch (error) {
                         res.statusCode = 500;
