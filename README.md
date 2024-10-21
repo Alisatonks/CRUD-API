@@ -1,6 +1,6 @@
 # Simple CRUD API
 
-This is a simple CRUD API using an in-memory database. Note that any data stored in memory (except initial users) will be lost upon system reboot. The server starts with three initial users.
+This is a simple CRUD API using an in-memory database. Note that any data stored in memory will be lost upon system reboot.
 
 ## Installation
 
