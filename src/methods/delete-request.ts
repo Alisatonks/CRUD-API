@@ -1,0 +1,52 @@
+import { IncomingMessage, ServerResponse } from 'http';
+import getBaseUrlAndID from '../utils/getBaseUrlAndID';
+import checkID from '../utils/checkId';
+import {findUserIndex, deleteUser} from '../db/users';
+import { VALIDATION_ERROR, 
+        ID_NOT_VALID, 
+        NOT_FOUND, 
+        USER_NOT_FOUND, 
+        ROUTE_NOT_FOUND, 
+        USER_ID_MISSING } from '../utils/constants';
+
+const deleteRequest = (req:IncomingMessage, res: ServerResponse) => {
+    const { baseUrl, id } = getBaseUrlAndID(req.url || '');
+    if(baseUrl === '/api/users') {
+        if(id) {
+           if (!checkID(id)) {
+                res.statusCode = 400;
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ title: VALIDATION_ERROR, message: ID_NOT_VALID }));
+            } else if (checkID(id)) {
+                const index = findUserIndex(id);
+                if (index === -1) {
+                        res.statusCode = 404; 
+                        res.setHeader("Content-Type", "application/json");
+                        res.end(JSON.stringify({ title: NOT_FOUND, message: USER_NOT_FOUND }));
+                } else {
+                    if (process.send) {
+                        process.send({ type: 'DELETE_USER', userId: id });
+                    }
+                        deleteUser(index);
+                        if (process.send) {
+                            process.send({ type: 'delete', id});
+                        }
+                        res.writeHead(204, {"Content-Type": "application/json"});
+                        res.end();
+                }
+            } 
+        } else {
+            res.statusCode = 400;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ title: 'Error', message: USER_ID_MISSING }));
+        }
+        
+    } else {
+        res.statusCode = 404; 
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ title: NOT_FOUND, message: ROUTE_NOT_FOUND }));
+    }
+    
+};
+
+export default deleteRequest;
